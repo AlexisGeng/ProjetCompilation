@@ -1,0 +1,6 @@
+src/fr/ul/miage/timestamp/generated/*.java
+src/fr/ul/miage/timestamp/generated/*.class
+.project
+.classpath
+.externalToolBuilders
+*.class

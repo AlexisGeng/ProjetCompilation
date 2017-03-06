@@ -1,0 +1,38 @@
+/*
+ * analyseur syntaxique  d'un langage fictif:
+ *
+ * auteurs : Laurene Cladt, Alexis Geng, Benjamin Rath, Enzo Proux
+ * (c) 2017
+ */ 
+package fr.ul.miage.compilation.generated;
+
+/* la grammaire */
+
+terminal CO, CF, SL, DP;
+terminal JAN, FEV, MAR, AVR, MAI, JUIN, JUIL, AOU, SEP, OCT, NOV, DEC;
+terminal DECAL;
+terminal NUM;
+
+non terminal  x, mois, timestamp;
+
+start with x;
+
+x ::= timestamp
+    ;
+      
+timestamp	::= CO NUM SL mois SL NUM DP NUM DP NUM DP NUM DECAL CF 
+    		;
+              
+mois 	::= JAN 
+		| FEV 
+		| MAR 
+		| AVR 
+		| MAI 
+		| JUIN 
+		| JUIL 
+		| AOU 
+		| SEP 
+		| OCT 
+		| NOV 
+		| DEC 
+		;
