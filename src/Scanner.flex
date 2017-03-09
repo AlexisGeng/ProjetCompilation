@@ -17,12 +17,12 @@ import java_cup.runtime.Symbol;
 %cup
 
 /* macros */
-NOM		= 	([A-Z]*[a-z]*)+
-TYPE 	=	([A-Z]*[a-z]*)+
+NOM		= 	[A-Za-z]+
+TYPE 	=	[A-Za-z]+
 SYM		=	[+*\/\-%]+
 NBR     =   [0-9]+
-COMP 	= 	[(<=)(>=)(!=)<>=]+
-FIN     =   "\n"|"\r\n"
+COMP 	= 	<=|>=|!=|[<>=]
+FIN     =   \n|\r\n
 
 %%
 
