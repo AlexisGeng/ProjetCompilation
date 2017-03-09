@@ -1,0 +1,13 @@
+int x ;
+
+def int f(int n):
+	if (n>0):
+		return 0;
+	endif;
+	return (n+f(n-1));
+enddef;
+
+def void main():
+	x <- f(5);
+enddef;
+

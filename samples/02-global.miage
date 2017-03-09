@@ -1,0 +1,9 @@
+int i <- 0;
+int j,k;
+
+def void main():
+	k<-1;
+	j<-k;
+	k<-i;
+enddef;
+

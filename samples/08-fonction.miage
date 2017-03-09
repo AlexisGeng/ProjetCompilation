@@ -1,0 +1,10 @@
+int i <- 1;
+int j <- 2; 
+
+def int f (int a):
+return 3;
+enddef;
+
+def void main():
+	i <- j-(3+f(i+j));
+enddef;

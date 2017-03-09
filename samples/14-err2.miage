@@ -1,0 +1,7 @@
+int i;
+int i;
+ 
+def void main():
+	i <- 0;
+enddef;
+

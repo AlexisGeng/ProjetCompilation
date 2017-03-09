@@ -1,0 +1,12 @@
+int i <- 0;
+int j <- 0;
+
+def int f( int a, int b):
+	int x,y,z;
+	return 0;
+enddef;
+
+def void main():
+	i <- f(i,j) ;
+enddef;
+

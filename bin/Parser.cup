@@ -25,6 +25,10 @@ terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, COMP, TYPE, DEF, ENDDEF
 
 non terminal vide, programme, declaration, decVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition;
 
+//Precedences added by Eclipse plugin
+precedence nonassoc RETURN;	// Inserted by Eclipse plugin
+precedence nonassoc DEF;	// Inserted by Eclipse plugin
+
 
 start with programme;
 
@@ -54,7 +58,6 @@ blocFonc ::= decVar bloc | boucle bloc | si bloc | fonction PV bloc | vide ;
 return ::= RETURN expr PV ;
 
 fonction ::= NOM PO argFonc PF ;
-
 argFonc ::= expr autreExpr | vide ;
 
 autreExpr ::= VIRGULE expr autreExpr | vide ;

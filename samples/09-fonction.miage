@@ -1,0 +1,13 @@
+int i <- 0;
+int j;
+
+def int f(int a):
+	int x;
+	x <- a+1;
+	return x;
+ enddef;
+
+def void main(){
+	j <- f(i);
+enddef;
+

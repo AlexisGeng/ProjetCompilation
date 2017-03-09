@@ -1,0 +1,11 @@
+int i <-3;
+int j;
+
+def void main():
+	if(1<2):
+		j <-0;
+		else:
+			j <-1;
+	endif;
+enddef;
+

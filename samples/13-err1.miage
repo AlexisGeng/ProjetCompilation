@@ -1,0 +1,12 @@
+int i,j <- 0;
+
+def int f(int a, int b):
+	int x;
+	x <- (a*2)+b-5/3
+	return x+2;
+enddef;
+
+def void main():
+	j <- read();
+	write(f(i+1,j));
+enddef;

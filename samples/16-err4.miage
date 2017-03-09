@@ -1,0 +1,10 @@
+int i;
+def void f():
+int x;
+x <- 0;
+enddef;
+
+def void main():
+i <- i + f();
+enddef;
+
