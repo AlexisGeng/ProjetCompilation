@@ -13,6 +13,7 @@ import java_cup.runtime.Symbol;
 /* options */
 %line
 %public
+%debug
 %cup
 
 /* macros */
@@ -40,8 +41,6 @@ FIN     =   "\n"|"\r\n"
 "elseif"	{ return new Symbol(sym.ELSEIF);}
 "else"		{ return new Symbol(sym.ELSE);}
 "endif"		{ return new Symbol(sym.ENDIF);}
-"for"		{ return new Symbol(sym.FOR);}
-"endfor"	{ return new Symbol(sym.ENDFOR);}
 "main"		{ return new Symbol(sym.MAIN);}
 {NOM}     	{ return new Symbol(sym.NOM);}
 {TYPE}     	{ return new Symbol(sym.TYPE);}

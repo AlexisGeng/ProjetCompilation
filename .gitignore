@@ -1,5 +1,7 @@
-src/fr/ul/miage/timestamp/generated/*.java
-src/fr/ul/miage/timestamp/generated/*.class
+src/fr/ul/miage/compilation/generated/*.java
+src/fr/ul/miage/compilation/generated/*.class
+src\fr\ul\miage\compilation\generated\
+src/fr/ul/miage/compilation/
 .project
 .classpath
 .externalToolBuilders
