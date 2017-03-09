@@ -8,31 +8,72 @@ package fr.ul.miage.compilation.generated;
 
 /* la grammaire */
 
-terminal CO, CF, SL, DP;
-terminal JAN, FEV, MAR, AVR, MAI, JUIN, JUIL, AOU, SEP, OCT, NOV, DEC;
-terminal DECAL;
-terminal NUM;
+terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, COMP, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE;
+/*
+ * PV = ;
+ * VIRGULE = ,
+ * FLECHE = <-
+ * PO = (
+ * PF = )
+ * DP = :
+ * NOM = le nom de la variable/fonction
+ * SYM = symbole math. + * - / % etc.
+ * NBR = 1,2,... nombre
+ * COMP = comparateur, cad. <,>,=,!= etc.
+ * TYPE = nom du type 
+*/
+terminal VIDE;
+// vide = rien ?
 
-non terminal  x, mois, timestamp;
+non terminal programme, declaration, decVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition;
 
-start with x;
 
-x ::= timestamp
-    ;
-      
-timestamp	::= CO NUM SL mois SL NUM DP NUM DP NUM DP NUM DECAL CF 
-    		;
+start with programme;
+
+programme ::= declaration main ;
+
+declaration ::= VIDE | decVar declaration | decFonc declaration ;
+
+decVar ::= TYPE NOM autreVar PV | TYPE NOM FLECHE expr PV ;
+
+autreVar ::= VIRGULE NOM autreVar | VIDE ;
+
+decFonc ::= DEF nomFonc DP bloc ENDDEF PV ;
+
+nomFonc ::= TYPE NOM PO arguments PF ;
+
+main ::= DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+
+arguments ::= TYPE NOM autreArgument | VIDE ;
+
+autreArgument ::= VIRGULE TYPE NOM autreArgument | VIDE ;
+
+bloc ::= blocFonc return | blocFonc ;
+// pas de distinction entre fonction void et fonction avec type
+
+blocFonc ::= decVar bloc | boucle bloc | si bloc | fonction PV bloc | VIDE ;
+
+return ::= RETURN expr PV ;
+
+fonction ::= NOM PO argFonc PF ;
+
+argFonc ::= expr autreExpr | VIDE ;
+
+autreExpr ::= VIRGULE expr autreExpr | VIDE ;
+
+expr ::= varExpr operation ;
+
+operation ::= SYM varExpr operation | VIDE ; 
+
+varExpr ::= NOM | fonction | NBR | PO expr PF ;
+
+boucle ::= WHILE PO condition PF DP bloc ENDWHILE PV ;
+
+si ::= IF PO condition PF DP bloc sinonsi sinon ENDIF PV ;
+
+sinonsi ::= ELSEIF PO condition PF DP bloc sinonsi | VIDE ;
+
+sinon ::= ELSE DP bloc | VIDE ;
+
+condition ::= expr COMP expr ;
               
-mois 	::= JAN 
-		| FEV 
-		| MAR 
-		| AVR 
-		| MAI 
-		| JUIN 
-		| JUIL 
-		| AOU 
-		| SEP 
-		| OCT 
-		| NOV 
-		| DEC 
-		;
