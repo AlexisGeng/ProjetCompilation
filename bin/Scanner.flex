@@ -17,22 +17,30 @@ import java_cup.runtime.Symbol;
 %cup
 
 /* macros */
-NOM		= 	([A-Z]*[a-z]*)+
-TYPE 	=	([A-Z]*[a-z]*)+
+SEP 	=   [ \t]
+RETOUR  = 	\n|\r
+NOM		= 	[A-Za-z][A-Za-z0-9]*
+TYPE 	=	int|double|string|char|boolean|void
 SYM		=	[+*\/\-%]+
 NBR     =   [0-9]+
-COMP 	= 	[(<=)(>=)(!=)<>=]+
-FIN     =   "\n"|"\r\n"
 
 %%
 
 /* regles */
+{SEP}		{ ; }
+{RETOUR}	{ ; }
 ";"			{ return new Symbol(sym.PV);}
 ","			{ return new Symbol(sym.VIRGULE);}
 "<-"		{ return new Symbol(sym.FLECHE);}
 "("			{ return new Symbol(sym.PO);}
 ")"			{ return new Symbol(sym.PF);}
 ":"         { return new Symbol(sym.DP);}
+"<"			{ return new Symbol(sym.INF);}
+">"			{ return new Symbol(sym.SUP);}
+"="			{ return new Symbol(sym.EGAL);}
+"<="		{ return new Symbol(sym.INFEGAL);}
+">="		{ return new Symbol(sym.SUPEGAL);}
+"!="		{ return new Symbol(sym.DIFF);}
 "def"		{ return new Symbol(sym.DEF);}
 "enddef"	{ return new Symbol(sym.ENDDEF);}
 "while"		{ return new Symbol(sym.WHILE);}
@@ -42,10 +50,8 @@ FIN     =   "\n"|"\r\n"
 "else"		{ return new Symbol(sym.ELSE);}
 "endif"		{ return new Symbol(sym.ENDIF);}
 "main"		{ return new Symbol(sym.MAIN);}
-{NOM}     	{ return new Symbol(sym.NOM);}
+"return"	{ return new Symbol(sym.RETURN);}
 {TYPE}     	{ return new Symbol(sym.TYPE);}
+{NOM}     	{ return new Symbol(sym.NOM);}
 {SYM}     	{ return new Symbol(sym.SYM);}
-{COMP}     	{ return new Symbol(sym.COMP);}
 {NBR}       { return new Symbol(sym.NBR);}
-{FIN}		{ return new Symbol(sym.EOF);}
-

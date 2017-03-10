@@ -27,9 +27,11 @@ public class Main {
 		try {
 			ParserCup parser = new ParserCup(new Yylex(new FileReader(args[0])));
 			parser.parse();
-			System.out.println("Analyse terminé avec succès");
+			System.out.println("Analyse terminée avec succès");
 		} catch (Exception e) {
 			System.err.println("Erreur de syntaxe");
+			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

@@ -7,7 +7,7 @@ def int f(int a):
 	return x;
  enddef;
 
-def void main(){
+def void main():
 	j <- f(i);
 enddef;
 

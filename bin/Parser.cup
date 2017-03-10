@@ -8,7 +8,7 @@ package fr.ul.miage.compilation.generated;
 
 /* la grammaire */
 
-terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, COMP, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE;
+terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
 /*
  * PV = ;
  * VIRGULE = ,
@@ -19,47 +19,58 @@ terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, COMP, TYPE, DEF, ENDDEF
  * NOM = le nom de la variable/fonction
  * SYM = symbole math. + * - / % etc.
  * NBR = 1,2,... nombre
- * COMP = comparateur, cad. <,>,=,!= etc.
+ * INF = <
+ * SUP = >
+ * EGAL = =
+ * INFEGAL = <=
+ * SUPEGAL = >=
+ * DIFF = !=
  * TYPE = nom du type 
 */
 
-non terminal vide, programme, declaration, decVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition;
+non terminal programme, declaration, decVar, defVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition, comp ;
+
+//Precedences added by Eclipse plugin
+precedence nonassoc RETURN;	// Inserted by Eclipse plugin
+precedence nonassoc DEF;	// Inserted by Eclipse plugin
 
 start with programme;
 
-programme ::= declaration main ;
+programme ::= declaration ;
 
-declaration ::= vide | decVar declaration | decFonc declaration ;
+declaration ::= decVar declaration | decFonc declaration | ;
 
-decVar ::= TYPE NOM autreVar PV | TYPE NOM FLECHE expr PV ;
+decVar ::= TYPE NOM autreVar PV | TYPE defVar ;
 
-autreVar ::= VIRGULE NOM autreVar | vide ;
+defVar ::= NOM FLECHE expr PV ;
 
-decFonc ::= DEF nomFonc DP bloc ENDDEF PV ;
+autreVar ::= VIRGULE NOM autreVar | ;
+
+decFonc ::= DEF nomFonc DP bloc ENDDEF PV | DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+//si main, return true pour "la fonction possède un main" (pour vérifier que la syntaxe est correcte) -> à implémenter
 
 nomFonc ::= TYPE NOM PO arguments PF ;
 
-main ::= DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+//main ::= DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
 
-arguments ::= TYPE NOM autreArgument | vide ;
+arguments ::= TYPE NOM autreArgument | ;
 
-autreArgument ::= VIRGULE TYPE NOM autreArgument | vide ;
+autreArgument ::= VIRGULE TYPE NOM autreArgument | ;
 
 bloc ::= blocFonc return | blocFonc ;
-// pas de distinction entre fonction void et fonction avec type
 
-blocFonc ::= decVar bloc | boucle bloc | si bloc | fonction PV bloc | vide ;
+blocFonc ::= decVar bloc | boucle bloc | si bloc | fonction PV bloc | defVar bloc | ;
 
 return ::= RETURN expr PV ;
 
 fonction ::= NOM PO argFonc PF ;
-argFonc ::= expr autreExpr | vide ;
+argFonc ::= expr autreExpr | ;
 
-autreExpr ::= VIRGULE expr autreExpr | vide ;
+autreExpr ::= VIRGULE expr autreExpr | ;
 
 expr ::= varExpr operation ;
 
-operation ::= SYM varExpr operation | vide ; 
+operation ::= SYM varExpr operation | ; 
 
 varExpr ::= NOM | fonction | NBR | PO expr PF ;
 
@@ -67,11 +78,11 @@ boucle ::= WHILE PO condition PF DP bloc ENDWHILE PV ;
 
 si ::= IF PO condition PF DP bloc sinonsi sinon ENDIF PV ;
 
-sinonsi ::= ELSEIF PO condition PF DP bloc sinonsi | vide ;
+sinonsi ::= ELSEIF PO condition PF DP bloc sinonsi | ;
 
-sinon ::= ELSE DP bloc | vide ;
+sinon ::= ELSE DP bloc | ;
 
-condition ::= expr COMP expr ;
+condition ::= expr comp expr ;
 
-vide ::= ;
+comp ::= INF | SUP | EGAL | SUPEGAL | INFEGAL | DIFF ;
               
