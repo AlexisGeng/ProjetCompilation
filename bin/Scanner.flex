@@ -13,7 +13,6 @@ import java_cup.runtime.Symbol;
 /* options */
 %line
 %public
-%debug
 %cup
 
 /* macros */
