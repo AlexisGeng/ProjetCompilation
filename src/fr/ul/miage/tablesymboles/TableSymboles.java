@@ -22,22 +22,22 @@ public class TableSymboles {
 	}
 	
 	public Symbole get(String s) {
-		return this.tableSymboles.get(s);
+		return tableSymboles.get(s);
 	}
 	
 	public HashMap<String, Symbole> getTable() {
-		return this.tableSymboles;
+		return tableSymboles;
 	}
 	
 	// vérifie si un symbole est deja dans la table
 	public boolean rechercheSymbole(Symbole s){
 		
-		return this.tableSymboles.containsKey(s.getIdentifiant());
+		return tableSymboles.containsKey(s.getIdentifiant());
 	}
 	
 	// Ajoute le symbole si il n'est pas deja dans la table
 	
-	public boolean insertionVerifValeur(String nom, int val, String type,
+	public boolean insertionVerifValeur(String nom, String val, String type,
 			String scope, String cat, int nbbloc, int nbparam,int rang, int numfonction) {
 		
 			Symbole symb = new Symbole(nom, type, val, rang, nbbloc,  cat,  nbparam, numfonction);
@@ -48,6 +48,16 @@ public class TableSymboles {
 			}
 			
 			return false;
+	}
+	
+	/**
+	 * Permet de récupérer la valeur d'un symbole à partir de son nom
+	 * @param s : nom du symbole à retrouver
+	 * @return valeur recherchée
+	 */
+
+	public String getValeur(String s) {
+		return tableSymboles.get(s).getVal();
 	}
 	
 	

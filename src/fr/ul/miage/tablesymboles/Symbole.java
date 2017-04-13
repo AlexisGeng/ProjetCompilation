@@ -30,8 +30,8 @@ public class Symbole {
 	
 	private String identifiant;// id du symbole
 	private String type; // void ou int
-	private int val; // ce que contient une variable
-	private String catégorie; //global,fonction,paramètre,local,varaible,constante
+	private String val; // ce que contient une variable
+	private String categorie; //global,fonction,paramètre,local,varaible,constante
 	private int nbloc; //étages
 	private int nbparam; // pour une fonction
 	private int numeroFonction; // numéro de la fonction 
@@ -40,14 +40,14 @@ public class Symbole {
 	
 	///CONSTRUCTEUR///////////////////////////////////
 	
-	public Symbole(String id, String type, int val, int rang,int nbbloc, String categorie, int nbpara,int numfonction) {
+	public Symbole(String id, String type, String val, int rang,int nbbloc, String categorie, int nbpara,int numfonction) {
 		this.identifiant = id;
 		this.type = type;
 		this.val = val;
 		this.nbloc= nbbloc;
 		this.rang=rang;
 		this.nbparam = nbpara;
-		this.catégorie = categorie;
+		this.categorie = categorie;
 		this.numeroFonction = numfonction;
 		
 	}
@@ -75,23 +75,23 @@ public class Symbole {
 	}
 
 
-	public int getVal() {
+	public String getVal() {
 		return val;
 	}
 
 
-	public void setVal(int val) {
+	public void setVal(String val) {
 		this.val = val;
 	}
 
 
 	public String getCatégorie() {
-		return catégorie;
+		return categorie;
 	}
 
 
 	public void setCatégorie(String catégorie) {
-		this.catégorie = catégorie;
+		this.categorie = catégorie;
 	}
 
 
@@ -135,6 +135,13 @@ public class Symbole {
 	}
 	
 	
+	/**
+	 * Méthode pour savoir si le symbole est une variable globale
+	 * @return Booléen: indiquant si le symbole est une variable globale
+	 */
+	public boolean isGlobalVariable(){
+		return type.equals("int") && categorie.equals("globale");  
+	}
 	
 	
 

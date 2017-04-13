@@ -56,12 +56,11 @@ public class Noeud {
 		//fonction
 		public final static int FCT = 23;
 		
-		
-		
 
 		/**
 		 * Constructeur avec Valeur et Pointeur. Cas typique des symboles ( "=" ...) et de la racine ("programme")
-		 * pointeur Pointeur est une reference vers la Table Des Symboles 
+		 * @param val
+		 * @param pointeur:  est une reference vers la Table Des Symboles 
 		 */
 		public Noeud(int val , Object pointeur){
 			this.fils = new ArrayList<Noeud>();
