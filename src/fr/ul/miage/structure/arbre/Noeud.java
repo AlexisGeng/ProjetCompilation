@@ -24,7 +24,7 @@ public class Noeud {
 		//Appel fct
 		public final static int APPEL = 6;
 		//Affectation
-		public final static int AFFECT = 7; 
+		public final static int DEC = 7; 
 		//Noeud principal
 		public final static int PRINCIPAL_NOD = 8;
 		//COndition si
@@ -34,11 +34,11 @@ public class Noeud {
 		//Inférieur
 		public final static int INF = 11;
 		// Egale
-		public final static int EQQ= 12;
+		public final static int EGAL= 12;
 		//Supérieur ou égale
-		public final static int SUPE = 13;
+		public final static int SUPEGAL = 13;
 		// Inférieur ou égale
-		public final static int INFE = 14;
+		public final static int INFEGAL = 14;
 		//while
 		public final static int WH = 15;
 		//sinon
@@ -56,7 +56,9 @@ public class Noeud {
 		//fonction
 		public final static int FCT = 23;
 		
-
+		public final static int LEC = 24;
+		
+		public final static int DIFF = 25;
 		/**
 		 * Constructeur avec Valeur et Pointeur. Cas typique des symboles ( "=" ...) et de la racine ("programme")
 		 * @param val
@@ -79,7 +81,7 @@ public class Noeud {
 		
 		/**
 		 * Seconde méthode d'affichage
-		 */
+		 
 		public String toString1() {
 			String res=" -- "+ this.getValEcrite()+" -- ";
 			return res;
@@ -88,7 +90,7 @@ public class Noeud {
 	
 		/**
 		 * Méthode d'affichage complete
-		 */
+		
 		public String toString() {
 			String res ="";
 			
@@ -112,7 +114,7 @@ public class Noeud {
 			return res;
 		}
 		
-		
+		 */
 	
 	/**
 	 * Méthode d'ajout d'un noeud
@@ -150,8 +152,7 @@ public class Noeud {
 	
 	/**
 	 * Méthode renvoyant la valeur écrite du Noeud (ce qui permet de déterminer le cas du noeud)
-	 */
-	
+	 
 	public String getValEcrite()
 	{
 		String res="";
@@ -181,8 +182,10 @@ public class Noeud {
 		case 21:res="EQ ";break;
 		case 22:res="NOM ";break;
 		case 23:res="FCT "+this.getPointeur();break;
+		case 24:res="LEC ";break;
 		}
 		return res;
 	}
+	*/
 	
 }

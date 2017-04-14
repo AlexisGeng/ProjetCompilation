@@ -32,7 +32,7 @@ public class Symbole {
 	private String type; // void ou int
 	private String val; // ce que contient une variable
 	private String categorie; //global,fonction,paramètre,local,varaible,constante
-	private int nbloc; //étages
+	private String nbloc; //étages
 	private int nbparam; // pour une fonction
 	private int numeroFonction; // numéro de la fonction 
 	private int rang; // ?????
@@ -40,7 +40,7 @@ public class Symbole {
 	
 	///CONSTRUCTEUR///////////////////////////////////
 	
-	public Symbole(String id, String type, String val, int rang,int nbbloc, String categorie, int nbpara,int numfonction) {
+	public Symbole(String id, String type, String val, int rang,String nbbloc, String categorie, int nbpara,int numfonction) {
 		this.identifiant = id;
 		this.type = type;
 		this.val = val;
@@ -95,12 +95,12 @@ public class Symbole {
 	}
 
 
-	public int getNbloc() {
+	public String getNbloc() {
 		return nbloc;
 	}
 
 
-	public void setNbloc(int nbloc) {
+	public void setNbloc(String nbloc) {
 		this.nbloc = nbloc;
 	}
 

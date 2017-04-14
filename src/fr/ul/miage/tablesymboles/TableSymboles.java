@@ -4,6 +4,16 @@ import java.util.HashMap;
 
 public class TableSymboles {
 	
+	/**************
+f_n : int, null, f, param, 0, 0
+f : int, null, glob, fonction, 2, 1
+x : int, 3, glob, var, 0, 0
+z : int, 34, glob, var, 0, 0
+main : void, null, glob, fonction, 0, 1
+main_x : int, 2, main, var, 0, 0
+f_az : int, null, f, param, 0, 0
+*/
+	
 	private HashMap<String, Symbole> tableSymboles;
 	
 	
@@ -38,7 +48,7 @@ public class TableSymboles {
 	// Ajoute le symbole si il n'est pas deja dans la table
 	
 	public boolean insertionVerifValeur(String nom, String val, String type,
-			String scope, String cat, int nbbloc, int nbparam,int rang, int numfonction) {
+			String scope, String cat, String nbbloc, int nbparam,int rang, int numfonction) {
 		
 			Symbole symb = new Symbole(nom, type, val, rang, nbbloc,  cat,  nbparam, numfonction);
 			
