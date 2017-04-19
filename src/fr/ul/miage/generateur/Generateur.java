@@ -11,7 +11,7 @@ import fr.ul.miage.tablesymboles.Symbole;
  * (c) 2017
  */ 
 
-// Le générateur fonctionne dans ce sens :  
+// Le gÃ©nÃ©rateur fonctionne dans ce sens :  
 //Il nous faut le Data (tds) 
 //Programme -> Code (Fonctions) -> Instruction (avec affectation, boucle, condition ...) -> Expression (calcul)
 
@@ -21,7 +21,11 @@ public class Generateur {
 	String fonction;
 	int j = 0; //compteur du nombre de bloc
 	int nbrSi=0; // Compteur du nombre de condition dans le programme
+<<<<<<< HEAD
 	int nbwhile=0; // Compteur du nombre de boucle au sein du programme
+=======
+	int nbrBoucle=0; //Compteur du nombre de boucles dans le programme
+>>>>>>> 8974e883d322942f0df2aa03b0188fe4bf1409b2
 	
 	
 	/**
@@ -36,11 +40,11 @@ public class Generateur {
 	}
 	
 	/**
-	 * Méthode qui va permettre de générer le code principal en Assembleur
-	 * @return StringBuffer, puisqu'on va enormément concaténer nos chaines de caractère pour créer le code en assembleur
+	 * MÃ©thode qui va permettre de gÃ©nÃ¨rer le code principal en Assembleur
+	 * @return StringBuffer, puisqu'on va enormÃ©ment concatÃ©ner nos chaines de caractÃ¨re pour crÃ©er le code en assembleur
 	 */
 	public StringBuffer genererProgramme(){
-		StringBuffer res = new StringBuffer("|Générer un programme de notre langage fictif\n");
+		StringBuffer res = new StringBuffer("|GÃ©nÃ¨rer un programme de notre langage fictif\n");
 		res.append(".include beta.uasm");
 		res.append(this.genererData().append("\n\n"));
 		res.append("\ndebut:\n\tCMOVE(pile,SP)\n\tCALL(main)\n\tHALT()\n\n");
@@ -53,13 +57,13 @@ public class Generateur {
 	
 
 	/**
-	 * Méthodes qui doit générer les variables globales
-	 * @return Le code assambleur pour générer les variables globales 
+	 * MÃ©thodes qui doit gÃ©nÃ©rer les variables globales
+	 * @return Le code assambleur pour gÃ©nÃ©rer les variables globales 
 	 */
 	
 	private StringBuffer genererData() {
-		StringBuffer res = new StringBuffer("|Générer Data\n");
-		// keyset retourne la clé de notre hashmap(tds)
+		StringBuffer res = new StringBuffer("|GÃ©nÃ¨rer Data\n");
+		// keyset retourne la clÃ© de notre hashmap(tds)
 		for(String v: tds.getTable().keySet()){
 			// on verifie que c'est une variable globale
 			if(tds.get(v).isGlobalVariable()){
@@ -75,12 +79,12 @@ public class Generateur {
 	
 	
 	/**
-	 * Méthode qui génère le code d'un programme, qui doit donc ensuite appeler la méthode générer_fonction
+	 * MÃ©thode qui gÃ©nÃ¨re le code d'un programme, qui doit donc ensuite appeler la mÃ©thode gÃ©nÃ¨rer_fonction
 	 * @return StringBuffer: code des fonctions en assembleur 
 	 */
 
 	private StringBuffer genererCode() {
-		StringBuffer res = new StringBuffer("|Générer code\n");
+		StringBuffer res = new StringBuffer("|GÃ©nÃ¨rer code\n");
 		for (Noeud nf : a.getRacine().getFils()) {
 			res.append(this.genererFonction(nf));
 		}
@@ -88,27 +92,27 @@ public class Generateur {
 	}
 	
 	/**
-	 *  Méthode qui génère les fonctions
+	 *  MÃ©thode qui gÃ©nÃ¨re les fonctions
 	 * @param nf: noeud de la fonction
-	 * @return StringBuffer: génére le code assembleur des fonctions
+	 * @return StringBuffer: gÃ©nÃ¨re le code assembleur des fonctions
 	 */
 	private Object genererFonction(Noeud nf) {
 		StringBuffer res = new StringBuffer("");
 		//si le noeud n'est pas null
 		if (nf != null) {
-			res = new StringBuffer("|Générer fonction\n");
-			// on récupere notre fonction
+			res = new StringBuffer("|GÃ©nÃ¨rer fonction\n");
+			// on rÃ©cupere notre fonction
 			String fonction = nf.getPointeur() + "->";
 			Symbole s = tds.get(fonction + nf.getPointeur() );
-			// si par exemple notre fonction "f" n'a pas d'antécédent comme "main_f" alors c'est égale à null
+			// si par exemple notre fonction "f" n'a pas d'antÃ©cÃ©dent comme "main_f" alors c'est Ã©gale Ã  null
 			if (s == null) {
-				// on récupère le symbole
+				// on rÃ©cupÃ¨re le symbole
 				s = tds.get("null->" + nf.getPointeur());
 			}
 			res.append(nf.getPointeur()
 					+ ":\n\tPUSH(LP)\n\tPUSH(BP)\n\tMOVE(SP,BP)\n\tALLOCATE("
 					+ s.getNbloc() + ")\n");
-			// on parcours ensuite les fonctions pour y générer les différentes instructions 
+			// on parcours ensuite les fonctions pour y gÃ©nÃ¨rer les diffÃ©rentes instructions 
 			for (Noeud n : nf.getFils()) {
 				res.append(this.genererInstruction(n));
 			}
@@ -122,22 +126,22 @@ public class Generateur {
 	}
 	
 	/**
-	 * Méthode qui génère les instructions
+	 * MÃ©thode qui gÃ©nÃ¨re les instructions
 	 * @param nf: noeud des instructions
-	 * @return StringBuffer: génére le code assembleur des instructions
+	 * @return StringBuffer: gÃ©nÃ¨re le code assembleur des instructions
 	 */
 	private Object genererInstruction(Noeud nf) {
-		StringBuffer res = new StringBuffer("|Générer instruction\n");
-		// Switch sur les différents cas que l'on peut retrouver au sein d'un programme
+		StringBuffer res = new StringBuffer("|GÃ©nÃ¨rer instruction\n");
+		// Switch sur les diffÃ©rents cas que l'on peut retrouver au sein d'un programme
 		switch (nf.getVal()) 
 		{
-		// déclaration 
+		// dÃ©claration 
 		case Noeud.DEC:
 			for (Noeud n : nf.getFils()) {
 				Symbole val = tds.get(fonction+n.getPointeur());
 				res.append("\n\tCMOVE(" + val.getVal() + ",r0)");
 				String[] t = fonction.split("->");
-				Symbole s = tds.get("null_" + t[0]); // on récupère l'élément avant la variable
+				Symbole s = tds.get("null_" + t[0]); // on rÃ©cupÃ¨re l'Ã©lÃ©ment avant la variable
 				int cb = (Integer.parseInt((s.getNbloc())) + 1 + j) * (4); //on comptre le nombre de bloc *4 (on compte en 4 octets)
 				res.append("\n\tPUTFRAME(r0," + cb + ")");
 				j++;
@@ -184,8 +188,8 @@ public class Generateur {
 	 * @return StringBuffer: code assembleur
 	 */
 	private Object genererExpression(Noeud nf) {
-		StringBuffer res = new StringBuffer("|Générer expression\n");
-		// Switch sur les différents cas que l'on peut retrouver au sein d'un programme
+		StringBuffer res = new StringBuffer("|GÃ©nÃ©rer expression\n");
+		// Switch sur les diffÃ©rents cas que l'on peut retrouver au sein d'un programme
 		switch(nf.getVal())
 		{
 		case Noeud.ADD:
@@ -219,7 +223,7 @@ public class Generateur {
 			res.append("\t" + genererExpression(filsdroits0));
 			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPNE(r1,r2,r3)\n\tPUSH(r3)");
 			break;
-			// Pas sûr de ce cas 
+			// Pas sÃ»r de ce cas 
 		case Noeud.IDF:
 			res.append("\n\tLD("+nf.getVal()+", r0)\n\tPUSH(r0)");
 			break;
@@ -269,7 +273,7 @@ public class Generateur {
 			res.append("\t" + genererLecture());
 			break;
 		default:
-			System.out.println("Ce noeud :" + nf.getVal()+" ne peut être traité !");
+			System.out.println("Ce noeud :" + nf.getVal()+" ne peut Ãªtre traitÃ© !");
 			break;
 		}
 		
@@ -299,12 +303,43 @@ public class Generateur {
 		return res;
 	}
 
+<<<<<<< HEAD
 
 	
 	/**
 	 * Méthode qui permet de générer les conditions 
 	 * @param nf: noeud 
 	 * @return StringBuffer: code assembleur
+=======
+	private StringBuffer genererBoucle(Noeud nf) {
+		StringBuffer res = new StringBuffer("|GÃ©nÃ©rer Boucle\n");
+		res.append("\nWhile"+nbrBoucle+":\n\t");
+		res.append("\n\t"+this.genererExpression(nf.getFils().get(0))); //pas sÃ»re que ca soit bien expression et non condition
+		res.append("\n\tPOP(r0)\n\tBF(Done"+nbrBoucle+":)");
+		res.append("\n\t"+this.genererBloc(nf.getFils().get(0)));
+		res.append("\n\tBR(While"+nbrBoucle+":)\nDone"+nbrBoucle+":");
+		return res;
+	}
+
+	private StringBuffer genererReturn(Noeud nf) {
+		StringBuffer res = new StringBuffer("|GÃ©nÃ©rer Return\n");
+		//nf a 0 ou 1 fils ; si 1 fils alors c'est forcement une expression
+		Noeud n = nf.getFils().get(0);
+		if (n != null) {
+			Symbole s = tds.get(n.getPointeur() + "->" + n.getPointeur());
+			res.append("\n\t"+this.genererExpression(n)+"\n\tPOP(r0)");
+			int b = (s.getNbparam()-2)*4;
+			res.append("\n\tPUTFRAME(r0,"+b+")");				
+		}				
+		res.append("\n\tBR(ret_"+n.getPointeur()+")");
+		return res;
+	}
+	
+	/**
+	 * MÃ©thode qui permet de gÃ©nÃ¨rer les conditions 
+	 * @param nf: noeud des conditions
+	 * @return StringBuffer
+>>>>>>> 8974e883d322942f0df2aa03b0188fe4bf1409b2
 	 */
 	private StringBuffer genererIf(Noeud nf) {
 		StringBuffer res = new StringBuffer("|Générer if\n");
