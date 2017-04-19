@@ -21,11 +21,8 @@ public class Generateur {
 	String fonction;
 	int j = 0; //compteur du nombre de bloc
 	int nbrSi=0; // Compteur du nombre de condition dans le programme
-<<<<<<< HEAD
 	int nbwhile=0; // Compteur du nombre de boucle au sein du programme
-=======
 	int nbrBoucle=0; //Compteur du nombre de boucles dans le programme
->>>>>>> 8974e883d322942f0df2aa03b0188fe4bf1409b2
 	
 	
 	/**
@@ -303,14 +300,9 @@ public class Generateur {
 		return res;
 	}
 
-<<<<<<< HEAD
 
 	
-	/**
-	 * Méthode qui permet de générer les conditions 
-	 * @param nf: noeud 
-	 * @return StringBuffer: code assembleur
-=======
+
 	private StringBuffer genererBoucle(Noeud nf) {
 		StringBuffer res = new StringBuffer("|GÃ©nÃ©rer Boucle\n");
 		res.append("\nWhile"+nbrBoucle+":\n\t");
@@ -339,7 +331,7 @@ public class Generateur {
 	 * MÃ©thode qui permet de gÃ©nÃ¨rer les conditions 
 	 * @param nf: noeud des conditions
 	 * @return StringBuffer
->>>>>>> 8974e883d322942f0df2aa03b0188fe4bf1409b2
+
 	 */
 	private StringBuffer genererIf(Noeud nf) {
 		StringBuffer res = new StringBuffer("|Générer if\n");
