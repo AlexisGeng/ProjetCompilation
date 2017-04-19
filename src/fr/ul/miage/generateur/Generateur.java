@@ -284,27 +284,27 @@ public class Generateur {
 		return null;
 	}
 
-	private String genererBoucle(Noeud nf) {
-		String res = new String("|Générer Boucle\n");
-		res+="\nWhile"+nbrBoucle+":\n\t";
-		res+="\n\t"+this.genererExpression(nf.getFils().get(0)); //pas sûre que ca soit bien expression et non condition
-		res+="\n\tPOP(r0)\n\tBF(Done"+nbrBoucle+":)";
-		res+="\n\t"+this.genererBloc(nf.getFils().get(0));
-		res+="\n\tBR(While"+nbrBoucle+":)\nDone"+nbrBoucle+":";
+	private StringBuffer genererBoucle(Noeud nf) {
+		StringBuffer res = new StringBuffer("|Générer Boucle\n");
+		res.append("\nWhile"+nbrBoucle+":\n\t");
+		res.append("\n\t"+this.genererExpression(nf.getFils().get(0))); //pas sûre que ca soit bien expression et non condition
+		res.append("\n\tPOP(r0)\n\tBF(Done"+nbrBoucle+":)");
+		res.append("\n\t"+this.genererBloc(nf.getFils().get(0)));
+		res.append("\n\tBR(While"+nbrBoucle+":)\nDone"+nbrBoucle+":");
 		return res;
 	}
 
-	private String genererReturn(Noeud nf) {
-		String res = new String("|Générer Return\n");
+	private StringBuffer genererReturn(Noeud nf) {
+		StringBuffer res = new StringBuffer("|Générer Return\n");
 		//nf a 0 ou 1 fils ; si 1 fils alors c'est forcement une expression
 		Noeud n = nf.getFils().get(0);
 		if (n != null) {
 			Symbole s = tds.get(n.getPointeur() + "->" + n.getPointeur());
-			res+="\n\t"+this.genererExpression(n)+"\n\tPOP(R0)";
+			res.append("\n\t"+this.genererExpression(n)+"\n\tPOP(r0)");
 			int b = (s.getNbparam()-2)*4;
-			res+="\n\tPUTFRAME(r0,"+b+")";				
+			res.append("\n\tPUTFRAME(r0,"+b+")");				
 		}				
-		res+="\n\tBR(ret_"+n.getPointeur()+")";
+		res.append("\n\tBR(ret_"+n.getPointeur()+")");
 		return res;
 	}
 	
