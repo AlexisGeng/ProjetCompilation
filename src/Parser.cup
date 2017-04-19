@@ -4,11 +4,47 @@
  * auteurs : Laurene Cladt, Alexis Geng, Benjamin Rath, Enzo Proux
  * (c) 2017
  */ 
+
 package fr.ul.miage.compilation.generated;
+import fr.ul.*;
+import fr.ul.miage.structure.arbre.*;
+import fr.ul.miage.tablesymboles.*;
+import fr.ul.miage.generateur.*;
+import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+import java.util.HashMap;
+import java.util.Map;
+
+
+parser code {:
+	public Arbre getArbre(){
+		return action_obj.arbre;
+	}
+	
+	public TableSymboles getTDS(){
+		return action_obj.tds;
+	}
+:}
+
+action code{:
+public Noeud prog= new Noeud(Noeud.PRINCIPAL_NOD,null);
+public Arbre arbre = new Arbre(prog);
+public TableSymboles tds = new TableSymboles();
+public ArrayList<Noeud> tableau_fct = new ArrayList();
+public int nbParam = 0;
+public int nbLoc = 0;
+public int nbFonction = 0;
+public String nomFonction;
+/*public ArrayList<Fonction> fonction_declare = new ArrayList();
+public ArrayList<Fonction> fonction_appele = new ArrayList();*/
+
+:}
 
 /* la grammaire */
 
-terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
+terminal PV, VIRGULE, FLECHE, PO, PF, DP,  SYM, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
+terminal String NOM;
+terminal Integer NBR;
 /*
  * PV = ;
  * VIRGULE = ,
@@ -28,7 +64,13 @@ terminal PV, VIRGULE, FLECHE, PO, PF, DP, NOM, SYM, NBR, INF, SUP, EGAL, INFEGAL
  * TYPE = nom du type 
 */
 
-non terminal programme, declaration, decVar, defVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition, comp ;
+
+
+non terminal programme, declaration, decVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition, comp ;
+non terminal Noeud s;
+non terminal Integer defVar;
+
+
 
 //Precedences added by Eclipse plugin
 precedence nonassoc RETURN;	// Inserted by Eclipse plugin
@@ -38,13 +80,20 @@ start with programme;
 
 programme ::= declaration ;
 
-declaration ::= decVar declaration | decFonc declaration | ;
+declaration ::= decVar declaration:fils{:prog.addFils(fils);:}
+			| decFonc declaration: fils {:tds.insererVarTemporaire();
+									prog.getFils().addAll(fils); 
+									:}  
+			| ;
 
-decVar ::= TYPE NOM autreVar PV | TYPE defVar ;
+decVar ::= TYPE NOM:nom autreVar PV {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
+															 :} | TYPE defVar:v {:tds.insertionVerifValeur(null, Integer.toString(v), "int", "glob", nbLoc, nbParam);
+															 :};
+															 
+defVar ::= NOM FLECHE expr:nbr PV {:RESULT = nbr; :};
 
-defVar ::= NOM FLECHE expr PV ;
-
-autreVar ::= VIRGULE NOM autreVar | ;
+autreVar ::= VIRGULE NOM:nom autreVar {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
+															 RESULT=nom; :} | ;
 
 decFonc ::= DEF nomFonc DP bloc ENDDEF PV | DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
 //si main, return true pour "la fonction possède un main" (pour vérifier que la syntaxe est correcte) -> à implémenter
@@ -68,11 +117,11 @@ argFonc ::= expr autreExpr | ;
 
 autreExpr ::= VIRGULE expr autreExpr | ;
 
-expr ::= varExpr operation ;
+expr ::= varExpr operation:op {:RESULT = op;:} ;
 
-operation ::= SYM varExpr operation | ; 
+operation ::= SYM varExpr: varexp operation {:RESULT =varexp;:} | ; 
 
-varExpr ::= NOM | fonction | NBR | PO expr PF ;
+varExpr ::= NOM | fonction | NBR:nbr {:RESULT =nbr;:} | PO expr PF ;
 
 boucle ::= WHILE PO condition PF DP bloc ENDWHILE PV ;
 

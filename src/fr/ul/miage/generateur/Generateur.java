@@ -21,6 +21,7 @@ public class Generateur {
 	String fonction;
 	int j = 0; //compteur du nombre de bloc
 	int nbrSi=0; // Compteur du nombre de condition dans le programme
+	int nbwhile=0; // Compteur du nombre de boucle au sein du programme
 	
 	
 	/**
@@ -176,7 +177,12 @@ public class Generateur {
 		}
 		return res;
 	}
-
+	
+	/**
+	 * Méthode qui génère les différentes expressions possibles du programme
+	 * @param nf: noeud
+	 * @return StringBuffer: code assembleur
+	 */
 	private Object genererExpression(Noeud nf) {
 		StringBuffer res = new StringBuffer("|Générer expression\n");
 		// Switch sur les différents cas que l'on peut retrouver au sein d'un programme
@@ -211,7 +217,7 @@ public class Generateur {
 			Noeud filsgauches0 = nf.getFils().get(0);
 			res.append("\t" + genererExpression(filsgauches0));
 			res.append("\t" + genererExpression(filsdroits0));
-			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPEQ(r1,r2,r3)\n\tPUSH(r3)");
+			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPNE(r1,r2,r3)\n\tPUSH(r3)");
 			break;
 			// Pas sûr de ce cas 
 		case Noeud.IDF:
@@ -222,28 +228,28 @@ public class Generateur {
 			Noeud filsgauches1 = nf.getFils().get(0);
 			res.append("\t" + genererExpression(filsgauches1));
 			res.append("\t" + genererExpression(filsdroits1));
-			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCOMPLT(r1,r2,r3)\n\tPUSH(r3)");
+			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPLT(r1,r2,r3)\n\tPUSH(r3)");
 			break;
 		case Noeud.SUP:
 			Noeud filsgauches2 = nf.getFils().get(0);
 			Noeud filsdroits2 = nf.getFils().get(1);
 			res.append("\t" + genererExpression(filsgauches2));
 			res.append("\t" + genererExpression(filsdroits2));
-			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCOMPLT(r2,r1,r3)\n\tPUSH(r3)");
+			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPLT(r2,r1,r3)\n\tPUSH(r3)");
 			break;
 		case Noeud.SUPEGAL:
 			Noeud filsgauches3 = nf.getFils().get(0);
 			Noeud filsdroits3 = nf.getFils().get(1);
 			res.append("\t" + genererExpression(filsgauches3));
 			res.append("\t" + genererExpression(filsdroits3));
-			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCOMPLE(r2,r1,r3)\n\tPUSH(r3)");
+			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPGE(r2,r1,r3)\n\tPUSH(r3)");
 			break;
 		case Noeud.INFEGAL:
 			Noeud filsgauches4 = nf.getFils().get(0);
 			Noeud filsdroits4 = nf.getFils().get(1);
 			res.append("\t" + genererExpression(filsgauches4));
 			res.append("\t" + genererExpression(filsdroits4));
-			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCOMPLE(r1,r2,r3)\n\tPUSH(r3)");
+			res.append("\n\tPOP(r2)\n\tPOP(r1)\n\tCMPGE(r1,r2,r3)\n\tPUSH(r3)");
 			break;
 		case Noeud.SUB:
 			Noeud filsgauche1 = nf.getFils().get(0);
@@ -271,35 +277,37 @@ public class Generateur {
 	}
 
 	
+	/**
+	 * Méthode pour générer les fonctions de lecture
+	 * @return StringBuffer: code assembleur
+	 */
+	private StringBuffer genererLecture() {
+		StringBuffer res = new StringBuffer("|Générer lecture\n");
+		res.append("\n.....\n\tPUSH()"); 
+		return res;
+	}
 
-	private String genererLecture() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Méthode pour génrer les fonctions d'écritue
+	 * @param nf:noeud
+	 * @return StringBuffer: code assemebleur
+	 */
+	private StringBuffer genererEcriture(Noeud nf) {
+		StringBuffer res = new StringBuffer("|Générer ecriture\n");
+		res.append(genererExpression(nf.getFils().get(0)));
+		res.append("\nPOP(r0)\n\t .......");
+		return res;
 	}
 
 
-	private String genererEcriture(Noeud nf) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String genererBoucle(Noeud nf) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String genererReturn(Noeud nf) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	/**
 	 * Méthode qui permet de générer les conditions 
-	 * @param nf: noeud des conditions
-	 * @return StringBuffer
+	 * @param nf: noeud 
+	 * @return StringBuffer: code assembleur
 	 */
 	private StringBuffer genererIf(Noeud nf) {
-		StringBuffer res = new StringBuffer("\n|generer_if\n");
+		StringBuffer res = new StringBuffer("|Générer if\n");
 		res.append("\nsi" + nbrSi + ":\n\t");
 		res.append(genererExpression(nf.getFils().get(0)) + "\n\tPOP(r0)\n\tBF(r0,sinon" + nbrSi + ")");
 		res.append(genererBloc(nf.getFils().get(1)) + "\n\tBR(si" + nbrSi + ")\nsinon" + nbrSi + ":\n");
@@ -311,15 +319,32 @@ public class Generateur {
 		nbrSi++;
 		return res;	
 	}
-
-	private String genererBloc(Noeud noeud) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * Méthode qui permet de générer les bloc
+	 * @param nf: noeud
+	 * @return StringBuffer: code assembleur
+	 */
+	private StringBuffer genererBloc(Noeud nf) {
+		StringBuffer res = new StringBuffer("|Générer bloc\n");
+		for (Noeud n1 : nf.getFils()) {
+			res.append(genererExpression(n1));
+		}
+		return res;
 	}
-
-	private String genererAffectation(Noeud nf) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/**
+	 * Méthode qui va générer les affectations
+	 * @param nf: noeud
+	 * @return StringBuffer: code assembleur
+	 */
+	private StringBuffer genererAffectation(Noeud nf) {
+		StringBuffer res = new StringBuffer("|Générer affectation\n");
+		Noeud filsgauche = nf.getFils().get(0);
+		Noeud filsdroit = nf.getFils().get(1);
+		res.append(genererInstruction(filsdroit));
+		res.append("\n\n\tPOP(r0)\n\tST(r0," + filsgauche.getPointeur() + ")\n");	
+		return res;
 	}
 	
 	

@@ -33,14 +33,14 @@ public class Symbole {
 	private String val; // ce que contient une variable
 	private String categorie; //global,fonction,paramètre,local,varaible,constante
 	private String nbloc; //étages
-	private int nbparam; // pour une fonction
+	private String nbparam; // pour une fonction
 	private int numeroFonction; // numéro de la fonction 
-	private int rang; // ?????
+	private String rang; // ?????
 
 	
 	///CONSTRUCTEUR///////////////////////////////////
 	
-	public Symbole(String id, String type, String val, int rang,String nbbloc, String categorie, int nbpara,int numfonction) {
+	public Symbole(String id, String type, String val, String rang,String nbbloc, String categorie, String nbpara,int numfonction) {
 		this.identifiant = id;
 		this.type = type;
 		this.val = val;
@@ -54,6 +54,42 @@ public class Symbole {
 	
 	/////////////////////////////////////////////////////
 
+
+	/**
+	 * Constructeur
+	 * @param id Identifiant du symbole
+	 * @param type Type du symbole ("int", "void", ...)
+	 * @param val Valeur dans le cas d'une variable
+	 * @param s Scope du symbole, indiquant si le symbole est global ou variable ("glob" ou "loc")
+	 * @param cat Catégorie du symbole ("fonction", "var" ou "const")
+	 */
+	public Symbole(String id, String type, String val, String s, String categorie) {
+		this.identifiant = id;
+		this.type = type;
+		this.val = val;
+		this.categorie = categorie;
+		this.nbloc="0";
+		this.rang="0";
+		this.nbparam = "0";
+	}
+	
+	/**
+	 * Constructeur
+	 * @param id Identifiant du symbole
+	 * @param type Type du symbole ("int", "void", ...)
+	 * @param s Scope du symbole, indiquant si le symbole est global ou variable ("glob" ou "loc")
+	 * @param cat Catégorie du symbole ("fonction", "var" ou "const")
+	 * @param nbloc Nombre de variables locales du symbole
+	 * @param nbp nombre de paramètres du symbole
+	 */
+	public Symbole(String id, String type, String s, String cat, int nbloc , int nbp) {
+		this.identifiant = id;
+		this.type = type;
+		this.categorie = cat;
+		this.nbloc = String.valueOf(nbloc);
+		this.rang="0";
+		this.nbparam = String.valueOf(nbp);
+	}
 
 	public String getIdentifiant() {
 		return identifiant;
@@ -105,12 +141,12 @@ public class Symbole {
 	}
 
 
-	public int getNbparam() {
+	public String getNbparam() {
 		return nbparam;
 	}
 
 
-	public void setNbparam(int nbparam) {
+	public void setNbparam(String nbparam) {
 		this.nbparam = nbparam;
 	}
 
@@ -125,12 +161,12 @@ public class Symbole {
 	}
 
 
-	public int getRang() {
+	public String getRang() {
 		return rang;
 	}
 
 
-	public void setRang(int rang) {
+	public void setRang(String rang) {
 		this.rang = rang;
 	}
 	

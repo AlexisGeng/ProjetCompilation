@@ -1,6 +1,10 @@
 package fr.ul.miage.tablesymboles;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+
+import fr.ul.miage.tablesymboles.Symbole;
 
 public class TableSymboles {
 	
@@ -15,7 +19,21 @@ f_az : int, null, f, param, 0, 0
 */
 	
 	private HashMap<String, Symbole> tableSymboles;
+	private ArrayList<Symbole> listeVarTemporaire;
+	private ArrayList<Integer> listeParametre;
+	private ArrayList<Integer> listeLoc;
 	
+	
+	/**
+	 * Constructeur de base
+	 */
+
+	public TableSymboles() {
+		tableSymboles = new HashMap<String, Symbole>();
+		listeVarTemporaire = new ArrayList<Symbole>();
+		listeParametre = new ArrayList<Integer>();
+		listeLoc = new ArrayList<Integer>();
+	}
 	
 	public TableSymboles(HashMap<String,Symbole> t){
 		this.tableSymboles = t;
@@ -45,19 +63,45 @@ f_az : int, null, f, param, 0, 0
 		return tableSymboles.containsKey(s.getIdentifiant());
 	}
 	
-	// Ajoute le symbole si il n'est pas deja dans la table
-	
+	/**
+	 * Méthode qui ajoute dans la Table des Symboles
+	 * @param nom nom de l'entrée
+	 * @param symb symbole à ajouter
+	 * @param nomFonction pour permettre d'avoir la syntaxe suivante nomFonction_nom
+	 * @throws DejaInitialiseException si l'entrée existe déjà
+	 */
+
+	public void ajouter(String nom, Symbole symb, String nomFonction)
+	{
+
+		String nomAvecFonction;
+
+		nomAvecFonction = nomFonction + "_" + nom;
+		if (!tableSymboles.containsKey(nomAvecFonction)) {
+			tableSymboles.put(nomAvecFonction, symb);
+		}
+
+	}
+
+	/**
+	 * Fonction inserant une entrée dans la tds, si celle-ci n'existe pas
+	 * @param nom nom du symbole
+	 * @param val valeur du symbole
+	 * @param type type du symbole
+	 * @param scope scope du symbole
+	 * @param cat catégorie du symbole
+	 * @param nbLoc nombre de paramètre local (cas d'une fonction)
+	 * @param nbParam nom de paramètre (argument), cas d'une fonction
+	 * @return Vrai si c'est ajouté, faux sinon
+	 */
 	public boolean insertionVerifValeur(String nom, String val, String type,
-			String scope, String cat, String nbbloc, int nbparam,int rang, int numfonction) {
+			 String cat, int nbLoc, int nbParam) {
+		boolean res = false;
+		Symbole symb = new Symbole(nom, val, type, cat, nbLoc, nbParam);
 		
-			Symbole symb = new Symbole(nom, type, val, rang, nbbloc,  cat,  nbparam, numfonction);
-			
-			if(!this.rechercheSymbole(symb)){
-				this.add(symb);
-				return true;
-			}
-			
-			return false;
+			this.ajouter(nom, symb, null);
+		res = true;
+		return res;
 	}
 	
 	/**
