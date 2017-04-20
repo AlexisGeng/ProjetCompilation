@@ -98,9 +98,11 @@ f_az : int, null, f, param, 0, 0
 			 String cat, int nbLoc, int nbParam) {
 		boolean res = false;
 		Symbole symb = new Symbole(nom, val, type, cat, nbLoc, nbParam);
-		
+		if(!this.rechercheSymbole(symb)){
 			this.ajouter(nom, symb, null);
-		res = true;
+			res = true;
+		}
+		
 		return res;
 	}
 	
@@ -113,7 +115,35 @@ f_az : int, null, f, param, 0, 0
 	public String getValeur(String s) {
 		return tableSymboles.get(s).getVal();
 	}
+
+	public void stockTemporaire(String nom, String string, String string2, String string3, int nbLoc, int nbParam,
+			int nbFonction) {
+		// TODO Auto-generated method stub
+		
+	}
 	
+	/**
+	 * Fonction inserant une entrée fonction dans la tds, si celle-ci n'existe pas
+	 * @param nom nom du symbole
+	 * @param val valeur du symbole
+	 * @param type type du symbole
+	 * @param cat catégorie du symbole
+	 * @param nbLoc nombre de paramètre local (cas d'une fonction)
+	 * @param nbParam nom de paramètre (argument), cas d'une fonction
+	 * @return Vrai si c'est ajouté, faux sinon
+	 */
+
+	public boolean insertionVerifValeur(String nomFonction, String nom,String val, String type, String cat, int nbLoc,int nbParam) {
+		boolean res = false;
+		Symbole symb = new Symbole(nomFonction + "_" + nom, val, type,
+				cat, nbLoc, nbParam);
+		if(!this.rechercheSymbole(symb)){
+			this.ajouter(nom, symb, nomFonction);
+			res = true;
+		}
+	
+		return res;
+	}
 	
 	
 	

@@ -94,12 +94,13 @@ public class Generateur {
 	 * @return StringBuffer: génère le code assembleur des fonctions
 	 */
 	private Object genererFonction(Noeud nf) {
+		
 		StringBuffer res = new StringBuffer("");
 		//si le noeud n'est pas null
 		if (nf != null) {
 			res = new StringBuffer("|Génèrer fonction\n");
 			// on récupere notre fonction
-			String fonction = nf.getPointeur() + "->";
+			String fonction = nf.getPointeur() + " -> ";
 			Symbole s = tds.get(fonction + nf.getPointeur() );
 			// si par exemple notre fonction "f" n'a pas d'antécédent comme "main_f" alors c'est égale à null
 			if (s == null) {
@@ -138,7 +139,7 @@ public class Generateur {
 				Symbole val = tds.get(fonction+n.getPointeur());
 				res.append("\n\tCMOVE(" + val.getVal() + ",r0)");
 				String[] t = fonction.split("->");
-				Symbole s = tds.get("null_" + t[0]); // on récupère l'élément avant la variable
+				Symbole s = tds.get("null -> " + t[0]); // on récupère l'élément avant la variable
 				int cb = (Integer.parseInt((s.getNbloc())) + 1 + j) * (4); //on comptre le nombre de bloc *4 (on compte en 4 octets)
 				res.append("\n\tPUTFRAME(r0," + cb + ")");
 				j++;
@@ -166,7 +167,7 @@ public class Generateur {
 			for (Noeud n : nf.getFils()) {
 				res.append("\n\tCMOVE(" + n.getVal() + ",r0)");
 				String[] t = fonction.split("->");
-				Symbole s = tds.get("null->" + t[0]);
+				Symbole s = tds.get("null -> " + t[0]);
 				int cb = (Integer.parseInt((s.getNbloc())) + 2 + j) * (-4);
 				res.append("\n\tPUTFRAME(r0," + cb + ")");
 				j++;

@@ -30,20 +30,21 @@ action code{:
 public Noeud prog= new Noeud(Noeud.PRINCIPAL_NOD,null);
 public Arbre arbre = new Arbre(prog);
 public TableSymboles tds = new TableSymboles();
-public ArrayList<Noeud> tableau_fct = new ArrayList();
+public ArrayList<Noeud> tableauFct = new ArrayList();
 public int nbParam = 0;
 public int nbLoc = 0;
 public int nbFonction = 0;
 public String nomFonction;
-/*public ArrayList<Fonction> fonction_declare = new ArrayList();
-public ArrayList<Fonction> fonction_appele = new ArrayList();*/
+public ArrayList<Fonction> fonctionDeclare = new ArrayList();
+public ArrayList<Fonction> fonctionAppele = new ArrayList();
+
 
 :}
 
 /* la grammaire */
 
-terminal PV, VIRGULE, FLECHE, PO, PF, DP,  SYM, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, TYPE, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
-terminal String NOM;
+terminal PV, VIRGULE, FLECHE, PO, PF, DP,  SYM, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
+terminal String NOM, TYPE;
 terminal Integer NBR;
 /*
  * PV = ;
@@ -66,9 +67,10 @@ terminal Integer NBR;
 
 
 
-non terminal programme, declaration, decVar, autreVar, decFonc, nomFonc, main, arguments, autreArgument, bloc, blocFonc, return, fonction, argFonc, expr, autreExpr, operation, varExpr, boucle, si, sinonsi, sinon, condition, comp ;
+non terminal programme, declaration, decVar, autreVar, decFonc, nomFonc, main, blocFonc, return, fonction, argFonc, autreExpr, boucle, si, sinonsi, sinon, condition, comp ;
 non terminal Noeud s;
-non terminal Integer defVar;
+non terminal Integer defVar, expr, operation,varExpr, arguments ;
+non terminal ArrayList<Noeud> bloc;
 
 
 
@@ -80,10 +82,8 @@ start with programme;
 
 programme ::= declaration ;
 
-declaration ::= decVar declaration:fils{:prog.addFils(fils);:}
-			| decFonc declaration: fils {:tds.insererVarTemporaire();
-									prog.getFils().addAll(fils); 
-									:}  
+declaration ::= decVar declaration
+			| decFonc declaration
 			| ;
 
 decVar ::= TYPE NOM:nom autreVar PV {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
@@ -95,16 +95,26 @@ defVar ::= NOM FLECHE expr:nbr PV {:RESULT = nbr; :};
 autreVar ::= VIRGULE NOM:nom autreVar {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
 															 RESULT=nom; :} | ;
 
-decFonc ::= DEF nomFonc DP bloc ENDDEF PV | DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+decFonc ::= DEF nomFonc:nom DP bloc:bloc ENDDEF PV {:Noeud n = new Noeud(Noeud.FCT, nom);n.getFils().addAll(bloc); 	tableauFct.add(n);:}  | DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+
+
+
 //si main, return true pour "la fonction possède un main" (pour vérifier que la syntaxe est correcte) -> à implémenter
 
-nomFonc ::= TYPE NOM PO arguments PF ;
+nomFonc ::= TYPE:type NOM:nom PO arguments:p PF {:fonctionDeclare.add(new Fonction(nom,type,p));nomFonction = nom ; tds.insertionVerifValeur(nom, null, type, "glob", "fonction", nbLoc, p);RESULT = tableauFct; :} ;
 
 //main ::= DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
 
-arguments ::= TYPE NOM autreArgument | ;
+arguments ::= TYPE NOM:nom arguments {:nbParam ++;
+									tds.stockTemporaire(nom, "int", "loc", "param", nbLoc, nbParam, nbFonction);
+									RESULT = nbParam;
+									:} 
+									| VIRGULE TYPE NOM:nom arguments {:nbParam ++;
+										tds.stockTemporaire(nom, "int", "loc", "param", nbLoc, nbParam, nbFonction);
+										RESULT = nbParam;:} 
+									|{:RESULT = 0 ; :}
+									 ;
 
-autreArgument ::= VIRGULE TYPE NOM autreArgument | ;
 
 bloc ::= blocFonc return | blocFonc ;
 
@@ -119,7 +129,7 @@ autreExpr ::= VIRGULE expr autreExpr | ;
 
 expr ::= varExpr operation:op {:RESULT = op;:} ;
 
-operation ::= SYM varExpr: varexp operation {:RESULT =varexp;:} | ; 
+operation ::= SYM varExpr:varexp operation {:RESULT =varexp;:} | ; 
 
 varExpr ::= NOM | fonction | NBR:nbr {:RESULT =nbr;:} | PO expr PF ;
 
