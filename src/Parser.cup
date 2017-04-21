@@ -45,7 +45,7 @@ public ArrayList<Fonction> fonctionAppele = new ArrayList();
 
 terminal PV, VIRGULE, FLECHE, PO, PF, DP,  SYM, INF, SUP, EGAL, INFEGAL, SUPEGAL, DIFF, DEF, ENDDEF, MAIN, RETURN, WHILE, ENDWHILE, IF, ENDIF, ELSEIF, ELSE ;
 terminal String NOM, TYPE;
-terminal Integer NBR;
+terminal Integer NBR,ADD,SUB,MUL,DIV;
 /*
  * PV = ;
  * VIRGULE = ,
@@ -67,10 +67,12 @@ terminal Integer NBR;
 
 
 
-non terminal programme, declaration, decVar, autreVar, decFonc, nomFonc, main, blocFonc, return, fonction, argFonc, autreExpr, boucle, si, sinonsi, sinon, condition, comp ;
+non terminal programme, declaration, decVar, decFonc, nomFonc, main, return, argFonc, autreExpr, sinonsi, sinon, condition, comp ;
 non terminal Noeud s;
-non terminal Integer defVar, expr, operation,varExpr, arguments ;
-non terminal ArrayList<Noeud> bloc;
+non terminal Integer defVar, operation, arguments, exprLoc ;
+non terminal ArrayList<Noeud> bloc, declaration_loc, autreVar,blocFonc;
+non terminal Noeud fonction, boucle, si, expr, varExpr;
+
 
 
 
@@ -86,16 +88,37 @@ declaration ::= decVar declaration
 			| decFonc declaration
 			| ;
 
-decVar ::= TYPE NOM:nom autreVar PV {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
-															 :} | TYPE defVar:v {:tds.insertionVerifValeur(null, Integer.toString(v), "int", "glob", nbLoc, nbParam);
-															 :};
+decVar ::= TYPE NOM:nom autreVar PV {:tds.insertionVerifValeur(nom, null, "int", "globale", nbLoc, nbParam);
+															 :} 
+															 | TYPE NOM:nom autreVar FLECHE NBR:nbr PV {:tds.insertionVerifValeur(nom, Integer.toString(nbr), "int", "globale", nbLoc, nbParam); RESULT=nbr;:}
+															 | declaration_loc:var  decVar exprLoc:expr PV 	{:tds.ajouterValeurListeTemporaire(var, expr);Noeud n = new Noeud(Noeud.DEC);n.getFils().addAll(var);RESULT = n;:}
+															 |NOM:nom NBR:nbr PV {:tds.insertionVerifValeur(nom, Integer.toString(nbr), "int", "loc", nbLoc, nbParam); :}
+															 ;
 															 
-defVar ::= NOM FLECHE expr:nbr PV {:RESULT = nbr; :};
+exprLoc ::= FLECHE NBR:nb {:RESULT = nb;:}
+		| 
+		; 
+		
+declaration_loc ::= TYPE NOM:nom autreVar:apres {:tds.stockTemporaire(nom, "int", "loc", "var", nbLoc, nbParam, nbFonction);
+												nbLoc ++;
+												apres.add(new Noeud(Noeud.NOM,nom));
+											
+												RESULT=apres;	
+												:}
+				| NOM:nom autreVar:apres
+				;
 
-autreVar ::= VIRGULE NOM:nom autreVar {:tds.insertionVerifValeur(nom, null, "int", "glob", nbLoc, nbParam);
-															 RESULT=nom; :} | ;
+autreVar ::= VIRGULE NOM:nom autreVar:l {:tds.insertionVerifValeur(nom, null, "int", "globale", nbLoc, nbParam); 
+											:}
+				| {: RESULT = new ArrayList<Noeud>();:};
 
-decFonc ::= DEF nomFonc:nom DP bloc:bloc ENDDEF PV {:Noeud n = new Noeud(Noeud.FCT, nom);n.getFils().addAll(bloc); 	tableauFct.add(n);:}  | DEF TYPE MAIN PO PF DP bloc ENDDEF PV ;
+decFonc ::= DEF nomFonc:nom DP bloc:bloc ENDDEF PV {:Noeud n = new Noeud(Noeud.FCT, nom);n.getFils().addAll(bloc); 	tableauFct.add(n);:}  
+		| DEF TYPE MAIN PO PF DP blocFonc:b ENDDEF PV {:fonctionDeclare.add(new Fonction("main","void",0));tds.insertionVerifValeur("main", null, "void", "glob", "fonction", nbLoc, 0);
+						 																			Noeud n = new Noeud(Noeud.FCT, "main");
+																									n.getFils().addAll(b);
+																									tableauFct.add(n);
+																									RESULT = tableauFct;:}
+		;
 
 
 
@@ -116,9 +139,31 @@ arguments ::= TYPE NOM:nom arguments {:nbParam ++;
 									 ;
 
 
-bloc ::= blocFonc return | blocFonc ;
 
-blocFonc ::= decVar bloc | boucle bloc | si bloc | fonction PV bloc | defVar bloc | ;
+
+
+blocFonc ::= NOM:nom FLECHE expr:e  PV blocFonc:i {:Noeud n = new Noeud(Noeud.EGAL);
+																n.addFils(new Noeud(Noeud.NOM,nom));
+																n.addFils(e);
+																i.add(0,n);
+																RESULT = i;
+													:}
+			| boucle:bcl bloc:b {:b.add(0,bcl);RESULT=b;:} | si:c bloc:b {:b.add(0,c);RESULT=b;:} | fonction:f PV bloc:b {:b.add(0,f);RESULT=b;:} | return |  {: RESULT = new ArrayList<Noeud>();:}  ;
+
+
+expr ::=  varExpr:n2 operation:i  {: Noeud n = new Noeud(i);
+									n.addFils(n2);
+									RESULT = n;:};
+									
+
+operation ::= ADD varExpr:varexp operation {: RESULT = Noeud.ADD;:}
+			| SUB varExpr:varexp operation {: RESULT = Noeud.SUB;:} 
+			| MUL varExpr:varexp operation  {: RESULT = Noeud.MUL;:}
+			| DIV varExpr:varexp operation{: RESULT = Noeud.DIV;:}
+			|  
+			; 
+
+varExpr ::= NOM | fonction | NBR:nbr {:RESULT = new Noeud(Noeud.CONST,nbr);:}| PO expr PF ;
 
 return ::= RETURN expr PV ;
 
@@ -127,11 +172,6 @@ argFonc ::= expr autreExpr | ;
 
 autreExpr ::= VIRGULE expr autreExpr | ;
 
-expr ::= varExpr operation:op {:RESULT = op;:} ;
-
-operation ::= SYM varExpr:varexp operation {:RESULT =varexp;:} | ; 
-
-varExpr ::= NOM | fonction | NBR:nbr {:RESULT =nbr;:} | PO expr PF ;
 
 boucle ::= WHILE PO condition PF DP bloc ENDWHILE PV ;
 
@@ -145,3 +185,5 @@ condition ::= expr comp expr ;
 
 comp ::= INF | SUP | EGAL | SUPEGAL | INFEGAL | DIFF ;
               
+
+

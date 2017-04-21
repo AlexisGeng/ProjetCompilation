@@ -2,8 +2,9 @@ package fr.ul.miage.tablesymboles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
-
+import fr.ul.miage.structure.arbre.*;
 import fr.ul.miage.tablesymboles.Symbole;
 
 public class TableSymboles {
@@ -97,7 +98,8 @@ f_az : int, null, f, param, 0, 0
 	public boolean insertionVerifValeur(String nom, String val, String type,
 			 String cat, int nbLoc, int nbParam) {
 		boolean res = false;
-		Symbole symb = new Symbole(nom, val, type, cat, nbLoc, nbParam);
+		Symbole symb = new Symbole(nom, type, val , cat, nbLoc, nbParam);
+		
 		if(!this.rechercheSymbole(symb)){
 			this.ajouter(nom, symb, null);
 			res = true;
@@ -146,6 +148,46 @@ f_az : int, null, f, param, 0, 0
 	}
 	
 	
+	/**
+	 * Méthode ajoutant les valeurs locales dans la Table des Symboles
+	 * @param var liste des noms de variable
+	 * @param val valeur que les variables vont prendre
+	 */
+
+	public void ajouterValeurListeTemporaire(ArrayList<Noeud> var, Integer val) {
+		ArrayList<Symbole> res = new ArrayList<Symbole>();
+
+		for (Symbole s : listeVarTemporaire) {
+			for (Noeud n : var) {
+				if (s.getIdentifiant().equals((String)n.getPointeur())) {
+					res.add(s);
+				}
+			}
+		}
+		for (Symbole s : res) {
+			listeVarTemporaire.remove(s);
+			s.setVal(String.valueOf(val));
+			listeVarTemporaire.add(s);
+		}
+	}
+
+	
+	/**
+	 * Fonction de visualisation
+	 */
+
+	public void visualisation() {
+		Iterator<String> iterateur = tableSymboles.keySet().iterator();
+		while (iterateur.hasNext()) {
+			Object key = iterateur.next();
+			Symbole test = tableSymboles.get(key);
+
+			System.out.println(test.getIdentifiant() + " : " + test.getType()
+					+ ", " + test.getVal() + ", "
+					+ test.getCatégorie() + ", " + test.getNbparam() + ", "
+					+ test.getNbloc());
+		}
+	}
 	
 	
 	

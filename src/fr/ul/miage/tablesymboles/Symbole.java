@@ -77,17 +77,17 @@ public class Symbole {
 	 * Constructeur
 	 * @param id Identifiant du symbole
 	 * @param type Type du symbole ("int", "void", ...)
-	 * @param s Scope du symbole, indiquant si le symbole est global ou variable ("glob" ou "loc")
+	 * @param val
 	 * @param cat Catégorie du symbole ("fonction", "var" ou "const")
 	 * @param nbloc Nombre de variables locales du symbole
 	 * @param nbp nombre de paramètres du symbole
 	 */
-	public Symbole(String id, String type, String s, String cat, int nbloc , int nbp) {
+	public Symbole(String id, String type, String val, String cat, int nbloc , int nbp) {
 		this.identifiant = id;
 		this.type = type;
+		this.val = val;
 		this.categorie = cat;
 		this.nbloc = String.valueOf(nbloc);
-		this.rang="0";
 		this.nbparam = String.valueOf(nbp);
 	}
 
@@ -176,7 +176,10 @@ public class Symbole {
 	 * @return Booléen: indiquant si le symbole est une variable globale
 	 */
 	public boolean isGlobalVariable(){
-		return type.equals("int") && categorie.equals("globale");  
+		if(type.equals("int") && categorie.equals("globale")){
+			return true;
+		}
+		return false;
 	}
 	
 	

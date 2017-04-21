@@ -1,4 +1,4 @@
-/*
+             /*
  * analyseur lexical d'un langage de programmation fictif:
  *
  * auteurs :  Laurene Cladt, Alexis Geng, Benjamin Rath, Enzo Proux
@@ -20,7 +20,6 @@ SEP 	=   [ \t]
 RETOUR  = 	\n|\r
 NOM		= 	[A-Za-z][A-Za-z0-9]*
 TYPE 	=	int|double|string|char|boolean|void
-SYM		=	[+*\/\-%]+
 NBR     =   [0-9]+
 
 %%
@@ -52,5 +51,8 @@ NBR     =   [0-9]+
 "return"	{ return new Symbol(ParserSym.RETURN);}
 {TYPE}     	{ return new Symbol(ParserSym.TYPE);}
 {NOM}     	{return new Symbol(ParserSym.NOM, new String(yytext()));}
-{SYM}     	{ return new Symbol(ParserSym.SYM);}
+"+"	{return new Symbol(ParserSym.ADD, new String(yytext()));}
+"-"	{return new Symbol(ParserSym.SUB, new String(yytext()));}
+"*"	{return new Symbol(ParserSym.MUL, new String(yytext()));}
+"/"	{return new Symbol(ParserSym.DIV, new String(yytext()));}
 {NBR}       {return new Symbol(ParserSym.NBR, new Integer(yytext()));}

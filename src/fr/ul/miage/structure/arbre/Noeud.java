@@ -59,6 +59,8 @@ public class Noeud {
 		public final static int LEC = 24;
 		
 		public final static int DIFF = 25;
+		public final static int CORPSWH = 26;
+		
 		/**
 		 * Constructeur avec Valeur et Pointeur. Cas typique des symboles ( "=" ...) et de la racine ("programme")
 		 * @param val

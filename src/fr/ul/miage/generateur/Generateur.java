@@ -1,6 +1,12 @@
 package fr.ul.miage.generateur;
 
 import fr.ul.miage.structure.arbre.Noeud;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import fr.ul.miage.structure.arbre.Arbre;
 import fr.ul.miage.tablesymboles.TableSymboles;
 import fr.ul.miage.tablesymboles.Symbole;
@@ -13,7 +19,7 @@ import fr.ul.miage.tablesymboles.Symbole;
 
 // Le générateur fonctionne dans ce sens :  
 //Il nous faut le Data (tds) 
-//Programme -> Code (Fonctions) -> Instruction (avec affectation, boucle, condition ...) -> Expression (calcul)
+//Programme _ Code (Fonctions) _ Instruction (avec affectation, boucle, condition ...) _ Expression (calcul)
 
 public class Generateur {
 	public TableSymboles tds;
@@ -43,7 +49,11 @@ public class Generateur {
 	public StringBuffer genererProgramme(){
 		StringBuffer res = new StringBuffer("|Génèrer un programme de notre langage fictif\n");
 		res.append(".include beta.uasm");
-		res.append(this.genererData().append("\n\n"));
+		//System.out.println(this.genererData());
+		if(this.genererData()!=null){
+			
+			res.append(this.genererData().append("\n\n"));
+		}
 		res.append("\ndebut:\n\tCMOVE(pile,SP)\n\tCALL(main)\n\tHALT()\n\n");
 		res.append(this.genererCode().append("\n\n"));
 		//res.append("pile:");
@@ -63,15 +73,23 @@ public class Generateur {
 		// keyset retourne la clé de notre hashmap(tds)
 		for(String v: tds.getTable().keySet()){
 			// on verifie que c'est une variable globale
+			System.out.println(v);
 			if(tds.get(v).isGlobalVariable()){
-				String [] tab= v.split(" ");
+				String [] tab= v.split("_");
 				String t = tab[1];
+				tds.visualisation();
 				// On met "long" puisque dans nos exemple nous avons seulement des entiers
-				res.append("\t" + t + ":LONG(" + tds.get(v).getVal().toString()
-						+ ")\n");
+				if(tds.get(v).getVal()==null){
+					res.append("\t" + t + ":LONG()\n");
+				}
+				else{
+					res.append("\t" + t + ":LONG(" + tds.get(v).getVal().toString()+ ")\n");
+				}
+				
 			}
+			
 		}
-		return null;
+		return res;
 	}
 	
 	
@@ -82,7 +100,9 @@ public class Generateur {
 
 	private StringBuffer genererCode() {
 		StringBuffer res = new StringBuffer("|Génèrer code\n");
+		//System.out.println(a.getRacine().getVal());
 		for (Noeud nf : a.getRacine().getFils()) {
+			//System.out.println(nf);
 			res.append(this.genererFonction(nf));
 		}
 		return res;
@@ -100,12 +120,12 @@ public class Generateur {
 		if (nf != null) {
 			res = new StringBuffer("|Génèrer fonction\n");
 			// on récupere notre fonction
-			String fonction = nf.getPointeur() + " -> ";
+			String fonction = nf.getPointeur() + "_";
 			Symbole s = tds.get(fonction + nf.getPointeur() );
 			// si par exemple notre fonction "f" n'a pas d'antécédent comme "main_f" alors c'est égale à null
 			if (s == null) {
 				// on récupère le symbole
-				s = tds.get("null->" + nf.getPointeur());
+				s = tds.get("null_" + nf.getPointeur());
 			}
 			res.append(nf.getPointeur()
 					+ ":\n\tPUSH(LP)\n\tPUSH(BP)\n\tMOVE(SP,BP)\n\tALLOCATE("
@@ -138,8 +158,8 @@ public class Generateur {
 			for (Noeud n : nf.getFils()) {
 				Symbole val = tds.get(fonction+n.getPointeur());
 				res.append("\n\tCMOVE(" + val.getVal() + ",r0)");
-				String[] t = fonction.split("->");
-				Symbole s = tds.get("null -> " + t[0]); // on récupère l'élément avant la variable
+				String[] t = fonction.split("_");
+				Symbole s = tds.get("null _ " + t[0]); // on récupère l'élément avant la variable
 				int cb = (Integer.parseInt((s.getNbloc())) + 1 + j) * (4); //on comptre le nombre de bloc *4 (on compte en 4 octets)
 				res.append("\n\tPUTFRAME(r0," + cb + ")");
 				j++;
@@ -166,8 +186,8 @@ public class Generateur {
 			res.append("\tALLOCATE(" + nf.getFils().size() + ")");
 			for (Noeud n : nf.getFils()) {
 				res.append("\n\tCMOVE(" + n.getVal() + ",r0)");
-				String[] t = fonction.split("->");
-				Symbole s = tds.get("null -> " + t[0]);
+				String[] t = fonction.split("_");
+				Symbole s = tds.get("null _ " + t[0]);
 				int cb = (Integer.parseInt((s.getNbloc())) + 2 + j) * (-4);
 				res.append("\n\tPUTFRAME(r0," + cb + ")");
 				j++;
@@ -319,7 +339,7 @@ public class Generateur {
 		//nf a 0 ou 1 fils ; si 1 fils alors c'est forcement une expression
 		Noeud n = nf.getFils().get(0);
 		if (n != null) {
-			Symbole s = tds.get(n.getPointeur() + "->" + n.getPointeur());
+			Symbole s = tds.get(n.getPointeur() + "_" + n.getPointeur());
 			res.append("\n\t"+this.genererExpression(n)+"\n\tPOP(r0)");
 			int b=Integer.parseInt(s.getNbparam())-2*(4); 
 			res.append("\n\tPUTFRAME(r0,"+b+")");				
@@ -375,6 +395,25 @@ public class Generateur {
 		return res;
 	}
 	
+	
+	/**
+	 * M�thode qui permet l'�criture du StringBuffer
+	 * @param sb : String qui va �tre �crit en assembleur
+	 */
+
+	public void generation(String sb) {
+		try {
+			BufferedWriter bw;
+			bw = new BufferedWriter(new FileWriter(new File(
+					"/Users/Alexis/Desktop/test.asm")));
+			bw.write(sb);
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }
 
