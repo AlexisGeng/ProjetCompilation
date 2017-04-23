@@ -2,6 +2,8 @@ package fr.ul.miage.structure.arbre;
 
 import java.util.ArrayList;
 
+
+
 public class Noeud {
 	
 	private ArrayList<Noeud> fils;
@@ -46,7 +48,7 @@ public class Noeud {
 		//puis
 		public final static int THEN = 17;
 		//retourne
-		public final static int RET = 18;
+		public final static int RETURN = 18;
 
 		public final static int ECRIRE = 20;
 		//equation
@@ -60,6 +62,9 @@ public class Noeud {
 		
 		public final static int DIFF = 25;
 		public final static int CORPSWH = 26;
+		public final static int AFFECT = 27;
+		public final static int EQQ = 27;
+		public final static int BOOL = 27;
 		
 		/**
 		 * Constructeur avec Valeur et Pointeur. Cas typique des symboles ( "=" ...) et de la racine ("programme")
@@ -189,5 +194,84 @@ public class Noeud {
 		return res;
 	}
 	*/
+	
+	/**
+	 * Méthode d'affichage
+	 */
+	public String toString() {
+		String res ="";
+		
+
+		if(this.getFils().size()>0){
+			 res = "\n"+"Noeud parent avec fils: "+"  "+this.getValEcrite()+" "+"\n";
+			
+				for(Noeud n: this.getFils()){
+					
+					res += n.toString1();
+				}
+				
+			
+		}
+		
+		
+		for(Noeud n: this.getFils()){
+			
+			res += n.toString();
+		}
+		return res;
+	}
+	
+	/**
+	 * Seconde méthode d'affichage
+	 * @return String à afficher
+	 */
+	public String toString1() {
+		String res=" -- "+ this.getValEcrite()+" -- ";
+		return res;
+	}
+	
+	/**
+	 * Méthode renvoyant la valeur écrite du Noeud (ce qui permet de déterminer le cas du noeud)
+	 * @return la valeur écrite du Noeud
+	 */
+	
+	public String getValEcrite()
+	{
+		String res="";
+		switch(this.getVal()){
+		
+		case 0 :res="CONST";break;
+		case 1:res="IDF ";break;
+		case 2: res="READ";break;
+		case 3: res="ADD";break;
+		case 4: res="SUB ";break;
+		case 5: res="MUL ";break;
+		case 6: res="DIV ";break;
+		case 7: res="APPEL ";break;
+		case 8: res="AFFECT "; break;
+		case 9: res="PRINCIPAL_NOD ";break;
+		case 10: res="IF ";break;
+		case 11:res="SUP";break;
+		case 12:res="INF ";break;
+		case 13:res="EQQ";break;
+		case 14:res="SUPE ";break;
+		case 15:res="INFE ";break;
+		case 16:res="WH ";break;
+		case 17:res="ELSE ";break;
+		case 18:res="THEN ";break;
+		case 19:res="CORPSWH";break;
+		case 20:res="RET ";break;
+		case 21:res="ECRIRE";break;
+		case 22:res="EQ ";break;
+		case 23:res="AFFECT";break;
+		case 25:res="NOM ";break;
+		case 26:res="FCT "+this.getPointeur();break;
+		case 27:res="EGAL";break;
+		case 28:res="RETURN";break;
+		case 29:res="BOOL";break;
+		}
+		return res;
+	}
+	
 	
 }

@@ -14,6 +14,7 @@ import java_cup.runtime.Symbol;
 %line
 %public
 %cup
+%debug
 
 /* macros */
 SEP 	=   [ \t]
@@ -35,21 +36,19 @@ NBR     =   [0-9]+
 ":"         { return new Symbol(ParserSym.DP);}
 "<"			{ return new Symbol(ParserSym.INF);}
 ">"			{ return new Symbol(ParserSym.SUP);}
-"="			{ return new Symbol(ParserSym.EGAL);}
+"=="			{ return new Symbol(ParserSym.EQQ);}
 "<="		{ return new Symbol(ParserSym.INFEGAL);}
 ">="		{ return new Symbol(ParserSym.SUPEGAL);}
-"!="		{ return new Symbol(ParserSym.DIFF);}
 "def"		{ return new Symbol(ParserSym.DEF);}
 "enddef"	{ return new Symbol(ParserSym.ENDDEF);}
 "while"		{ return new Symbol(ParserSym.WHILE);}
 "endwhile"	{ return new Symbol(ParserSym.ENDWHILE);}
 "if"		{ return new Symbol(ParserSym.IF);}
-"elseif"	{ return new Symbol(ParserSym.ELSEIF);}
 "else"		{ return new Symbol(ParserSym.ELSE);}
 "endif"		{ return new Symbol(ParserSym.ENDIF);}
 "main"		{ return new Symbol(ParserSym.MAIN);}
 "return"	{ return new Symbol(ParserSym.RETURN);}
-{TYPE}     	{ return new Symbol(ParserSym.TYPE);}
+{TYPE}     	{ return new Symbol(ParserSym.TYPE, new String(yytext()));}
 {NOM}     	{return new Symbol(ParserSym.NOM, new String(yytext()));}
 "+"	{return new Symbol(ParserSym.ADD, new String(yytext()));}
 "-"	{return new Symbol(ParserSym.SUB, new String(yytext()));}

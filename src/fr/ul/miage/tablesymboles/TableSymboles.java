@@ -99,7 +99,7 @@ f_az : int, null, f, param, 0, 0
 			 String cat, int nbLoc, int nbParam) {
 		boolean res = false;
 		Symbole symb = new Symbole(nom, type, val , cat, nbLoc, nbParam);
-		
+		//System.out.println(cat);
 		if(!this.rechercheSymbole(symb)){
 			this.ajouter(nom, symb, null);
 			res = true;
@@ -190,7 +190,87 @@ f_az : int, null, f, param, 0, 0
 	}
 	
 	
+
+	/**
+	 * Méthode d'ajout dans la liste de paramètres
+	 * @param i : valeur à ajouter
+	 */
+
+	public void setListeParametre(int i) {
+		listeParametre.add(i);
+	}
 	
+	/**
+	 * Méthode d'ajout dans la liste de variable locale
+	 * @param i : valeur à ajouter
+	 */
+
+
+	public void setListeLoc(int i) {
+		listeLoc.add(i);
+	}
+	/**
+	 * Parcourt des variables temporaire pour avoir les fonctions
+	 */
+
+	public void insererVarTemporaire() {
+		ArrayList<Symbole> listeFonction = new ArrayList<Symbole>();
+		Iterator<String> iterateur = tableSymboles.keySet().iterator();
+		while (iterateur.hasNext()) {
+			Object key = iterateur.next();
+			Symbole test = tableSymboles.get(key);
+			if (test.getCatégorie() == "fonction") {
+				listeFonction.add(test);
+			}
+		}
+
+		for (Symbole symb : listeVarTemporaire) {
+			this.insertionVerifValeur(
+					listeFonction.get(symb.getNumeroFonction())
+							.getIdentifiant(), symb.getIdentifiant(), symb
+							.getVal(), symb.getType(),
+					 symb.getCatégorie(), 0, 0);
+		}
+		listeVarTemporaire.clear();
+
+		insererParamEtVarloc();
+	}
+	
+	
+	/**
+	 * Fonction d'insertion des paramètres et variables locales
+	 */
+
+	public void insererParamEtVarloc() {
+		ArrayList<Symbole> listeFonction = new ArrayList<Symbole>();
+		Iterator<String> iterateur = tableSymboles.keySet().iterator();
+		while (iterateur.hasNext()) {
+			Object key = iterateur.next();
+			Symbole test = tableSymboles.get(key);
+			if (test.getCatégorie() == "fonction") {
+				listeFonction.add(test);
+			}
+		}
+
+		for (int i = 0; i < listeParametre.size(); i++) {
+			listeFonction.get(i).setNbparam(
+					String.valueOf(listeParametre.get(i)));
+		}
+
+		for (int i = 0; i < listeLoc.size(); i++) {
+			listeFonction.get(i).setNbloc(String.valueOf(listeLoc.get(i)));
+		}
+	}
+	
+	/**
+	 * Méthode permettant de vérifier si une clé existe dans la Table des Symboles
+	 * @param nomFonction String à vérifier
+	 * @return Vrai si elle existe faux sinon
+	 */
+
+	public boolean clefExiste(String nomFonction) {
+		return tableSymboles.containsKey(nomFonction);
+	}
 	
 
 }

@@ -91,6 +91,27 @@ public class Symbole {
 		this.nbparam = String.valueOf(nbp);
 	}
 
+	
+	/**
+	 * Constructeur
+	 * @param id Identifiant du symbole
+	 * @param type Type du symbole ("int", "void", ...)
+	 * @param s Scope du symbole, indiquant si le symbole est global ou variable ("glob" ou "loc")
+	 * @param cat Catégorie du symbole ("fonction", "var" ou "const")
+	 * @param nbloc Nombre de variables locales du symbole
+	 * @param nbp nombre de paramètres du symbole
+	 * @param numFonction numéro de la fonction
+	 */
+	
+	public Symbole(String id, String type, String s, String cat, int nbloc , int nbp, int numFonction) {
+		this.identifiant = id;
+		this.type = type;
+		this.categorie = cat;
+		this.nbloc = String.valueOf(nbloc);
+		this.rang="0";
+		this.nbparam = String.valueOf(nbp);
+		this.numeroFonction = numFonction;
+	}
 	public String getIdentifiant() {
 		return identifiant;
 	}

@@ -1,7 +1,7 @@
 int i <- 0;
-int j,k,z <- 3;
+int j,k,z;
 
 def void main():
-   
+    k<-500+200;
 enddef;
 

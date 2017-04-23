@@ -30,15 +30,17 @@ public class Main {
 		try {
 			
 			ParserCup parser = new ParserCup(new Yylex(new FileReader(
-			new File("samples/03-expression.miage"))));
+			new File("samples/06-local.miage"))));
 		
 			parser.parse();
 			System.out.println("Analyse terminée avec succès");
 			Arbre a = parser.getArbre();				
 			TableSymboles tds = parser.getTDS();				
 			Generateur generateur = new Generateur(tds,a);
+			
 			StringBuffer sb = generateur.genererProgramme();
 			generateur.generation(sb.toString());
+			//a.affichage();
 			System.out.println("Syntaxe acceptée ! Fichier généré.");
 		} catch (Exception e) {
 			System.err.println("Erreur de syntaxe");
