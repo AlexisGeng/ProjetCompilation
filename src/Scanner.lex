@@ -14,7 +14,7 @@ import java_cup.runtime.Symbol;
 %line
 %public
 %cup
-%debug
+
 
 /* macros */
 SEP 	=   [ \t]

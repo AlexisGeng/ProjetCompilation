@@ -28,20 +28,19 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			MainTest test = new MainTest();
+			test.test2();
+			test.test3();
+			test.test4();
+			test.test5();
+			test.test6();
+			test.test7();
+			//test.test8();
+			test.test9();
+			//test.test10();
+			//test.test11();
+			test.test12();
 			
-			ParserCup parser = new ParserCup(new Yylex(new FileReader(
-			new File("samples/06-local.miage"))));
-		
-			parser.parse();
-			System.out.println("Analyse terminée avec succès");
-			Arbre a = parser.getArbre();				
-			TableSymboles tds = parser.getTDS();				
-			Generateur generateur = new Generateur(tds,a);
-			
-			StringBuffer sb = generateur.genererProgramme();
-			generateur.generation(sb.toString());
-			//a.affichage();
-			System.out.println("Syntaxe acceptée ! Fichier généré.");
 		} catch (Exception e) {
 			System.err.println("Erreur de syntaxe");
 			System.err.println(e.getMessage());

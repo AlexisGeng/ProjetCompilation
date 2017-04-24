@@ -20,7 +20,6 @@ parser code {:
 	public Arbre getArbre(){
 		return action_obj.arbre;
 	}
-	
 	public TableSymboles getTDS(){
 		return action_obj.tds;
 	}
@@ -31,9 +30,7 @@ public Noeud prog= new Noeud(Noeud.PRINCIPAL_NOD,null);
 public Arbre arbre = new Arbre(prog);
 public TableSymboles tds = new TableSymboles();
 public ArrayList<Noeud> tableauFct = new ArrayList();
-public int nbParam = 0;
-public int nbLoc = 0;
-public int nbFonction = 0;
+public int nbParam, nbLoc, nbFonction = 0;
 public String nomFonction;
 public ArrayList<Fonction> fonctionDeclare = new ArrayList();
 public ArrayList<Fonction> fonctionAppele = new ArrayList();
@@ -85,13 +82,10 @@ start with programme;
 
 
 programme ::= decVar programme:f{:prog.addFils(f);
-							System.out.println("");
-							//tds.visualisation();
 						   :}
 	| decFonc:f {:tds.insererVarTemporaire();
 							prog.getFils().addAll(f); 
-							//Fonction.verificationsFonction(fonction_appele,fonction_declare);
-							//arbre.affichage();:} 
+				:} 
 	; 
 
 /*------VARIABLES GLOBALES------*/
